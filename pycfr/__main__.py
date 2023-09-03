@@ -1,6 +1,6 @@
-from models.Range import Range
-from models.CardConfig import CardConfig
 from constants import NOT_DEALT
+from models.CardConfig import CardConfig
+from models.Range import Range
 
 
 def main() -> None:

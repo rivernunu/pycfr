@@ -3,7 +3,9 @@ from dataclasses import dataclass
 
 @dataclass
 class Suitedness:
-    Suited: str = ""
-    Offsuit: str = ""
-    All: str = ""
-    Specific: list[int, int] = [-1, -1]
+    Suited: bool = False
+    Offsuit: bool = False
+    All: bool = False
+    Specific: bool = False
+    suit1: int = -1
+    suit2: int = -1

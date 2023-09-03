@@ -1,84 +1,42 @@
-from typing import Iterator, Union
-from models.Suitedness import Suitedness
-
-
 class CardParser:
-    def parse_board_str(self, string: str) -> list[int] | int:
-        if len(string) == 2:
-            return self.card_from_str(string)
-        elif len(string) == 6:
-            return self.flop_from_str(string)
-        else:
-            raise ValueError
+    _rank_map: dict[str, int] = {
+        "A": 12,
+        "a": 12,
+        "K": 11,
+        "k": 11,
+        "Q": 10,
+        "q": 10,
+        "J": 9,
+        "j": 9,
+        "T": 8,
+        "t": 8,
+        "9": 7,
+        "8": 6,
+        "7": 5,
+        "6": 4,
+        "5": 3,
+        "4": 2,
+        "3": 1,
+        "2": 0,
+    }
+    _suit_map: dict[str, int] = {"c": 0, "d": 1, "h": 2, "s": 3}
 
-    def parse_simple_singleton(self, combo: str) -> list[int]:
-        chars = iter(combo)
-        rank1: int = self.char_to_rank(chars)
-        suit1: int = self.char_to_suit(chars)
-        rank2: int = self.char_to_rank(chars)
-        suit2: int = self.char_to_suit(chars)
-
-        if rank1 < rank2:
-            raise SyntaxError
-
-        if rank1 == rank2 and suit1 == suit2:
-            raise SyntaxError
-
-        return [rank1, rank2, Suitedness(Specific=[suit1, suit2])]
-
-    def flop_from_str(self, string: str) -> list[int]:
-        result = [0] * 3
-        chars = iter(string)
-
-        result[0] = self.card_from_chars(chars)
-        result[1] = self.card_from_chars(chars)
-        result[2] = self.card_from_chars(chars)
-
-        result.sort()
-
-        return result
-
-    def card_from_str(self, string: str) -> int:
-        chars = iter(string)
-        result = self.card_from_chars(chars)
-
-        return result
-
-    def card_from_chars(self, chars: Iterator[str]) -> int:
-        rank_char = next(chars)
-        suit_char = next(chars)
-
-        rank = self.char_to_rank(rank_char)
-        suit = self.char_to_suit(suit_char)
-
-        return (rank << 2) | suit
-
-    def char_to_rank(self, rank_str: str) -> int:
-        rank_map: dict[str, int] = {
-            "A": 12,
-            "K": 11,
-            "Q": 10,
-            "J": 9,
-            "T": 8,
-            "9": 7,
-            "8": 6,
-            "7": 5,
-            "6": 4,
-            "5": 3,
-            "4": 2,
-            "3": 1,
-            "2": 0,
-        }
-        rank_str = rank_str.upper()
-        if rank_str in rank_map:
-            return rank_map[rank_str]
+    @classmethod
+    def char_to_rank(cls, rank_str: str) -> int:
+        if rank_str in cls._rank_map:
+            return cls._rank_map[rank_str]
         else:
             raise ValueError(f"Expected rank character: {rank_str}")
 
-    def char_to_suit(self, suit_str: str) -> int:
-        suit_map = {"c": 0, "d": 1, "h": 2, "s": 3}
-
-        if suit_str in suit_map:
-            return suit_map[suit_str]
+    @classmethod
+    def char_to_suit(cls, suit_str: str) -> int:
+        if suit_str in cls._suit_map:
+            return cls._suit_map[suit_str]
         else:
             raise ValueError(f"Expected suit character: {suit_str}")
+
+    @staticmethod
+    def card_pair_to_index(card1: int, card2: int) -> int:
+        if card1 > card2:
+            card1, card2 = card2, card1
+        return card1 * (101 - card1) // 2 + card2 - 1

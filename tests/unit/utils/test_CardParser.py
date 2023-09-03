@@ -1,5 +1,6 @@
 import pytest
-from pycfr.utils.CardParser import CardParser
+
+from pycfr.utils.BoardParser import CardParser
 
 
 @pytest.fixture
@@ -45,3 +46,7 @@ def test_char_to_suit(card_parser):
     result = card_parser.char_to_suit(suit_str)
     assert isinstance(result, int)
     assert result == 0
+
+
+def test_card_pair_to_index(card_parser):
+    ...
