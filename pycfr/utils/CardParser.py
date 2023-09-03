@@ -1,4 +1,5 @@
-from typing import Iterator
+from typing import Iterator, Union
+from models.Suitedness import Suitedness
 
 
 class CardParser:
@@ -9,6 +10,21 @@ class CardParser:
             return self.flop_from_str(string)
         else:
             raise ValueError
+
+    def parse_simple_singleton(self, combo: str) -> list[int]:
+        chars = iter(combo)
+        rank1: int = self.char_to_rank(chars)
+        suit1: int = self.char_to_suit(chars)
+        rank2: int = self.char_to_rank(chars)
+        suit2: int = self.char_to_suit(chars)
+
+        if rank1 < rank2:
+            raise SyntaxError
+
+        if rank1 == rank2 and suit1 == suit2:
+            raise SyntaxError
+
+        return [rank1, rank2, Suitedness(Specific=[suit1, suit2])]
 
     def flop_from_str(self, string: str) -> list[int]:
         result = [0] * 3
