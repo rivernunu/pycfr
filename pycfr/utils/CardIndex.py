@@ -49,6 +49,7 @@ class CardIndex:
         for i in range(4):
             for j in range(4):
                 result.append(CardParser.card_pair_to_index(4 * rank1 + i, 4 * rank2 + j))
+
         return result
 
     @staticmethod
@@ -57,6 +58,7 @@ class CardIndex:
 
         for i in range(4):
             result.append(CardParser.card_pair_to_index(4 * rank1 + i, 4 * rank2 * i))
+
         return result
 
     @staticmethod
