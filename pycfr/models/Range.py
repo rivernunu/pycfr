@@ -16,13 +16,3 @@ class Range:
             return True
         else:
             raise ValueError
-
-    def set_weight(self, indices: list[int], weight: float) -> None:
-        """Rangeに値を格納します.
-
-        Args:
-            indices (list[int]): Rangeのインデックスのリスト
-            weight (float): 重み. 値は0~1のみを許容します.
-        """
-        for index in indices:
-            self.data[index] = weight

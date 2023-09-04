@@ -3,30 +3,37 @@ from utils.CardParser import CardParser
 
 
 class CardIndex:
-    def indices_with_suitedness(self, rank1: int, rank2: int, suitedness: Suitedness) -> list[int]:
+    @staticmethod
+    def indices_with_suitedness(rank1: int, rank2: int, suitedness: Suitedness) -> list[int]:
         if rank1 == rank2:
-            ...
             if suitedness.All:
-                ...
+                return CardIndex._pair_indices(rank1)
             elif suitedness.Specific:
-                CardParser.card_pair_to_index(
-                    4 * rank1 + suitedness.suit1, 4 * rank1 + suitedness.suit2
-                )
+                return [
+                    CardParser.card_pair_to_index(
+                        4 * rank1 + suitedness.suit1, 4 * rank1 + suitedness.suit2
+                    )
+                ]
             else:
                 raise ValueError
         else:
             if suitedness.Suited:
-                ...
+                return CardIndex._suited_indices(rank1, rank2)
             elif suitedness.Offsuit:
-                ...
+                return CardIndex._offsuit_indices(rank1, rank2)
             elif suitedness.All:
-                ...
+                return CardIndex._nonpair_indices(rank1, rank2)
             elif suitedness.Specific:
-                ...
+                return [
+                    CardParser.card_pair_to_index(
+                        4 * rank1 + suitedness.suit1, 4 * rank1 + suitedness.suit2
+                    )
+                ]
             else:
                 raise ValueError
 
-    def _pair_indices(self, rank: int) -> list[int]:
+    @staticmethod
+    def _pair_indices(rank: int) -> list[int]:
         result: list[int] = []
 
         for i in range(4):
@@ -35,7 +42,8 @@ class CardIndex:
 
         return result
 
-    def _nonpair_indices(self, rank1: int, rank2: int) -> list[int]:
+    @staticmethod
+    def _nonpair_indices(rank1: int, rank2: int) -> list[int]:
         result: list[int] = []
 
         for i in range(4):
@@ -43,14 +51,16 @@ class CardIndex:
                 result.append(CardParser.card_pair_to_index(4 * rank1 + i, 4 * rank2 + j))
         return result
 
-    def _suited_indices(self, rank1: int, rank2: int) -> list[int]:
+    @staticmethod
+    def _suited_indices(rank1: int, rank2: int) -> list[int]:
         result: list[int] = []
 
         for i in range(4):
             result.append(CardParser.card_pair_to_index(4 * rank1 + i, 4 * rank2 * i))
         return result
 
-    def _offsuit_indices(self, rank1: int, rank2: int) -> list[int]:
+    @staticmethod
+    def _offsuit_indices(rank1: int, rank2: int) -> list[int]:
         result: list[int] = []
         for i in range(4):
             for j in range(4):

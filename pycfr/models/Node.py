@@ -1,8 +1,13 @@
 from dataclasses import dataclass
 from typing import Optional
 
-from constants import (NOT_DEALT, PLAYER_CHANCE_FLAG, PLAYER_MASK_FLAG,
-                       PLAYER_OOP, PLAYER_TERMINAL_FLAG)
+from constants import (
+    NOT_DEALT,
+    PLAYER_CHANCE_FLAG,
+    PLAYER_MASK_FLAG,
+    PLAYER_OOP,
+    PLAYER_TERMINAL_FLAG,
+)
 from models.Action import Action
 
 
