@@ -1,16 +1,18 @@
 from typing import Iterator
 
-from utils.CardParser import CardParser
+from pycfr.utils.CardParser import CardParser
 
 
 class BoardParser:
     def parse_board_str(self, string: str) -> list[int] | int:
+        if not isinstance(string, str):
+            raise TypeError(f"Arg must be a string type. {string}")
         if len(string) == 2:
             return self._card_from_str(string)
         elif len(string) == 6:
             return self._flop_from_str(string)
         else:
-            raise ValueError
+            raise ValueError(f"Arg length must be 2 or 6. {string}")
 
     def _flop_from_str(self, string: str) -> list[int]:
         result = [0] * 3
