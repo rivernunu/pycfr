@@ -40,13 +40,12 @@ class TestNormalSuite:
             board_parser (BoardParser): The BoardParser instance.
             string (str): The input board string.
             expected (list[int]): The expected parsed result.
-
-        Returns:
-            None
         """
-        assert board_parser.parse_board_str(string) == expected
+        assert board_parser.parse(string) == expected
 
-    @pytest.mark.parametrize("string, expected", [("2c", 0), ("As", 51)])
+    @pytest.mark.parametrize(
+        "string, expected", [("2c", 0), ("2d", 1), ("2h", 2), ("2s", 3), ("As", 51)]
+    )
     def test_turn_or_river(self, board_parser: BoardParser, string: str, expected: int) -> None:
         """Test case to check if the board string is parsed correctly.
 
@@ -54,11 +53,8 @@ class TestNormalSuite:
             board_parser (BoardParser): The BoardParser instance.
             string (str): The input board string.
             expected (int): The expected parsed result.
-
-        Returns:
-            None
         """
-        assert board_parser.parse_board_str(string) == expected
+        assert board_parser.parse(string) == expected
 
 
 class TestExceptionSuite:
@@ -76,12 +72,9 @@ class TestExceptionSuite:
         Args:
             board_parser (BoardParser): The BoardParser instance.
             string (str): The input board string.
-
-        Returns:
-            None
         """
         with pytest.raises(TypeError):
-            board_parser.parse_board_str(string)
+            board_parser.parse(string)
 
     @pytest.mark.parametrize("string", ["", "A", "AdAc", "AhKdJsQc", "AsKsQsJsTs"])
     def test_parse_board_str_invalid_length(self, board_parser: BoardParser, string: str) -> None:
@@ -90,9 +83,6 @@ class TestExceptionSuite:
         Args:
             board_parser (BoardParser): The BoardParser instance.
             string (str): The input board string.
-
-        Returns:
-            None
         """
         with pytest.raises(ValueError):
-            board_parser.parse_board_str(string)
+            board_parser.parse(string)
