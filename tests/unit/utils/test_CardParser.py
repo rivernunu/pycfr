@@ -29,6 +29,6 @@ class TestNormalSuite:
     def test_char_to_suit(self, suit_str: str, expected: int) -> None:
         assert CardParser.char_to_suit(suit_str) == expected
 
-    @pytest.mark.parametrize("card1, card2, expect", [(1, 2, 0), (2, 3, 1), (50, 51, 1325)])
+    @pytest.mark.parametrize("card1, card2, expect", [(0, 1, 0), (0, 2, 1), (50, 51, 1325)])
     def test_card_pair_to_index(self, card1: int, card2: int, expect: int) -> None:
         assert CardParser.card_pair_to_index(card1, card2) == expect

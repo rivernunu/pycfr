@@ -39,6 +39,7 @@ class CardParser:
     def card_pair_to_index(card1: int, card2: int) -> int:
         if card1 > card2:
             card1, card2 = card2, card1
+
         return card1 * (101 - card1) // 2 + card2 - 1
 
     @staticmethod
