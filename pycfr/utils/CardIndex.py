@@ -1,5 +1,5 @@
-from models.Suitedness import Suitedness
-from utils.CardParser import CardParser
+from pycfr.models.Suitedness import Suitedness
+from pycfr.utils.CardParser import CardParser
 
 
 class CardIndex:

@@ -40,3 +40,7 @@ class CardParser:
         if card1 > card2:
             card1, card2 = card2, card1
         return card1 * (101 - card1) // 2 + card2 - 1
+
+    @staticmethod
+    def index_to_card_pair(index: int) -> tuple[int, int]:
+        ...
