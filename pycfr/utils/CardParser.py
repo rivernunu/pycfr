@@ -23,13 +23,17 @@ class CardParser:
 
     @classmethod
     def char_to_rank(cls, rank_str: str) -> int:
+        if not isinstance(rank_str, str):
+            raise TypeError(f"rank_str must be string. {rank_str}")
         if rank_str in cls._rank_map:
-            return cls._rank_map[rank_str]
+            return cls._rank_map[str(rank_str)]
         else:
             raise ValueError(f"Expected rank character: {rank_str}")
 
     @classmethod
     def char_to_suit(cls, suit_str: str) -> int:
+        if not isinstance(suit_str, str):
+            raise TypeError(f"rank_str must be string. {suit_str}")
         if suit_str in cls._suit_map:
             return cls._suit_map[suit_str]
         else:

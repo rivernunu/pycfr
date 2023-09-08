@@ -11,7 +11,7 @@ class CardIndex:
             elif suitedness.Specific:
                 return [
                     CardParser.card_pair_to_index(
-                        4 * rank1 + suitedness.suit1, 4 * rank1 + suitedness.suit2
+                        4 * rank1 + suitedness.Specific[0], 4 * rank1 + suitedness.Specific[1]
                     )
                 ]
             else:
@@ -26,7 +26,7 @@ class CardIndex:
             elif suitedness.Specific:
                 return [
                     CardParser.card_pair_to_index(
-                        4 * rank1 + suitedness.suit1, 4 * rank1 + suitedness.suit2
+                        4 * rank1 + suitedness.Specific[0], 4 * rank1 + suitedness.Specific[1]
                     )
                 ]
             else:

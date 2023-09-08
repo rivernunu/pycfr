@@ -92,7 +92,7 @@ class BoardParser:
         rank_char = next(chars)
         suit_char = next(chars)
 
-        rank = CardParser.char_to_rank(rank_char)
-        suit = CardParser.char_to_suit(suit_char)
+        rank = CardParser.char_to_rank(str(rank_char))
+        suit = CardParser.char_to_suit(str(suit_char))
 
         return (rank << 2) | suit
