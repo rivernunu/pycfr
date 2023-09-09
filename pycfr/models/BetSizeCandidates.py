@@ -1,9 +1,12 @@
 from dataclasses import dataclass
 
-from models.BetSize import BetSize
+from src.models.BetSize import BetSize
 
 
 @dataclass
 class BetSizeCandidates:
-    bet: list[BetSize]
-    raise_: list[BetSize]
+    list_bet_size: list[BetSize]
+    list_raise_size: list[BetSize]
+
+    def try_form(bet_size_str: str, raise_size_str: str) -> None:
+        
