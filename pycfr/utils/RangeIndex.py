@@ -76,12 +76,25 @@ class RangeIndex:
         result: list[int] = []
 
         for i in range(4):
-            result.append(CardParser.card_pair_to_index(4 * rank1 + i, 4 * rank2 * i))
+            result.append(CardParser.card_pair_to_index(4 * rank1 + i, 4 * rank2 + i))
 
         return result
 
     @staticmethod
     def _offsuit_indices(rank1: int, rank2: int) -> list[int]:
+        """Returns a list of indices representing the offsuit combinations of two card ranks.
+
+        Args:
+            rank1 (int): The rank of the first card. Should be an integer between 0 and 12.
+            rank2 (int): The rank of the second card. Should be an integer between 0 and 12.
+
+        Returns:
+            list[int]: A list of indices representing the offsuit combinations of the two ranks.
+
+        Example:
+            >>> RangeIndex.extract(12, 11, Suitedness(SuitednessType.Offsuit))
+            [1307, 1312, 1316, 1302, 1313, 1317, 1303, 1309, 1318, 1304, 1310, 1315]
+        """
         result: list[int] = []
         for i in range(4):
             for j in range(4):
