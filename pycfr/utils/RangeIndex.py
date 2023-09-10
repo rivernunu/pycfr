@@ -20,7 +20,7 @@ class RangeIndex:
 
         Example:
             >>> RangeIndex.extract(0, 0, Suitedness(SuitednessType.Specific, (0,1))
-            0
+            [0]
             >>> RangeIndex.extract(0, 0, Suitedness(SuitednessType.All))
             [0, 1, 2, 51, 52, 101]
         """
