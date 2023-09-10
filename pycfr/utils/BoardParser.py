@@ -9,10 +9,9 @@ class BoardParser:
     The board string can represent either a single card or a flop of three cards.
 
     Example:
-        >>> board_parser = BoardParser()
-        >>> board_parser.parse("3d")
-        5
-        >>> board_parser.parse("2c3d4h")
+        >>> BoardParser.parse("3d")
+        [5]
+        >>> BoardParser.parse("2c3d4h")
         [0, 5, 10]
     """
 

@@ -139,4 +139,4 @@ class BetSizeStrategy:
         return BetSize(type=BetSizeType.PotRelative, value=value)
 
     def parse_allin(self, string: str) -> BetSize:
-        return BetSize(type=BetSizeType.AllIn)
+        return BetSize(type=BetSizeType.AllIn, value=0)

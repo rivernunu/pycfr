@@ -1,6 +1,6 @@
 from collections.abc import Iterator
 
-from pycfr.models.Suitedness import Suitedness
+from pycfr.models.Suitedness import Suitedness, SuitednessType
 from pycfr.utils.CardParser import CardParser
 from pycfr.utils.RangeIndex import RangeIndex
 
@@ -118,7 +118,7 @@ class RangeParser:
         if rank1 == rank2 and suit1 == suit2:
             raise SyntaxError
 
-        return rank1, rank2, Suitedness(Specific=(suit1, suit2))
+        return rank1, rank2, Suitedness(SuitednessType.Specific, (suit1, suit2))
 
     @staticmethod
     def __parse_compound_singleton(combo: str) -> tuple[int, int, Suitedness]:
@@ -129,18 +129,18 @@ class RangeParser:
         try:
             suit = next(chars)
             if suit == "o":
-                suitedness = Suitedness(Offsuit=True)
+                suitedness = Suitedness(SuitednessType.Offsuit)
             elif suit == "s":
-                suitedness = Suitedness(Suited=True)
+                suitedness = Suitedness(SuitednessType.Suited)
             else:
                 ValueError
         except StopIteration:
-            suitedness = Suitedness(All=True)
+            suitedness = Suitedness(SuitednessType.All)
 
         if rank1 < rank2:
             raise SyntaxError
 
-        if rank1 == rank2 & suitedness.All:
+        if rank1 == rank2 & suitedness.type == SuitednessType.All:
             raise SyntaxError
 
         return rank1, rank2, suitedness

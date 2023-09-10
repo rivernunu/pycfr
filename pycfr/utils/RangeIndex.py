@@ -1,4 +1,4 @@
-from pycfr.models.Suitedness import Suitedness
+from pycfr.models.Suitedness import Suitedness, SuitednessType
 from pycfr.utils.CardParser import CardParser
 
 
@@ -19,30 +19,30 @@ class RangeIndex:
             ValueError: If the given parameters do not meet any of the specified conditions.
 
         Example:
-            >>> RangeIndex.extract(0, 0, Suitedness(Specific=(0,1)))
+            >>> RangeIndex.extract(0, 0, Suitedness(SuitednessType.Specific, (0,1))
             0
-            >>> RangeIndex.extract(0, 0, Suitedness(All=True))
+            >>> RangeIndex.extract(0, 0, Suitedness(SuitednessType.All))
             [0, 1, 2, 51, 52, 101]
         """
         if rank1 == rank2:
-            if suitedness.All:
+            if suitedness.type == SuitednessType.All:
                 return RangeIndex._pair_indices(rank1)
-            elif suitedness.Specific:
+            elif suitedness.type == SuitednessType.Specific:
                 return [
                     CardParser.card_pair_to_index(
-                        4 * rank1 + suitedness.Specific[0], 4 * rank1 + suitedness.Specific[1]
+                        4 * rank1 + suitedness.suit[0], 4 * rank1 + suitedness.suit[1]
                     )
                 ]
             else:
                 raise ValueError(f"invalid suitedness with a pair. {suitedness}")
         else:
-            if suitedness.Suited:
+            if suitedness.type == SuitednessType.Suited:
                 return RangeIndex._suited_indices(rank1, rank2)
-            elif suitedness.Offsuit:
+            elif suitedness.type == SuitednessType.Offsuit:
                 return RangeIndex._offsuit_indices(rank1, rank2)
-            elif suitedness.All:
+            elif suitedness.type == SuitednessType.All:
                 return RangeIndex._not_pair_indices(rank1, rank2)
-            elif suitedness.Specific:
+            elif suitedness.type == SuitednessType.Specific:
                 return [
                     CardParser.card_pair_to_index(
                         4 * rank1 + suitedness.Specific[0], 4 * rank1 + suitedness.Specific[1]
