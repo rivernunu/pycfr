@@ -1,4 +1,5 @@
 from dataclasses import dataclass, field
+
 from pycfr.utils.RangeParser import RangeParser
 
 
@@ -13,10 +14,10 @@ class Range:
         )
 
     def ones(self) -> None:
-        self.data = [1.0] * int(52 * 51 / 2)
+        self.range_list_float_representation = [1.0] * int(52 * 51 / 2)
 
     def clear(self) -> None:
-        self.data = [0.0] * int(52 * 51 / 2)
+        self.range_list_float_representation = [0.0] * int(52 * 51 / 2)
 
     def check_weight(self, weight: float) -> bool:
         if 0.0 <= weight <= 1.0:

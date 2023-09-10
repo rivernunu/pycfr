@@ -1,14 +1,9 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Optional
 
-from constants import (
-    NOT_DEALT,
-    PLAYER_CHANCE_FLAG,
-    PLAYER_MASK_FLAG,
-    PLAYER_OOP,
-    PLAYER_TERMINAL_FLAG,
-)
-from models.Action import Action
+from pycfr.constants import (NOT_DEALT, PLAYER_CHANCE_FLAG, PLAYER_MASK_FLAG,
+                             PLAYER_OOP, PLAYER_TERMINAL_FLAG)
+from pycfr.models.Action import Action
 
 
 @dataclass
@@ -26,9 +21,9 @@ class Node:
     scale1: float = 0.0
     scale2: float = 0.0
     scale3: float = 0.0
-    storage1: bytearray = bytearray()
-    storage2: bytearray = bytearray()
-    storage3: bytearray = bytearray()
+    storage1: bytearray = field(default_factory=bytearray)
+    storage2: bytearray = field(default_factory=bytearray)
+    storage3: bytearray = field(default_factory=bytearray)
 
     def is_terminal(self) -> bool:
         """終端かどうかを返す.

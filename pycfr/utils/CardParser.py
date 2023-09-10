@@ -23,8 +23,24 @@ class CardParser:
 
     @classmethod
     def char_to_rank(cls, rank_str: str) -> int:
+        """Convert a rank character to a rank value.
+
+        Args:
+            rank_str (str): The rank character to be converted.
+
+        Returns:
+            int: The rank value corresponding to the input rank_str.
+
+        Raises:
+            TypeError: If rank_str is not a string.
+            ValueError: If rank_str is not a valid rank character.
+
+        Example:
+            >>> CardParser.char_to_rank("A")
+            12
+        """
         if not isinstance(rank_str, str):
-            raise TypeError(f"rank_str must be string. {rank_str}")
+            raise TypeError(f"rank_str must be a string. {rank_str}")
         if rank_str in cls._rank_map:
             return cls._rank_map[str(rank_str)]
         else:
@@ -32,8 +48,24 @@ class CardParser:
 
     @classmethod
     def char_to_suit(cls, suit_str: str) -> int:
+        """Convert a suit character to a suit value.
+
+        Args:
+            suit_str (str): The suit character to be converted.
+
+        Returns:
+            int: The suit value corresponding to the input suit_str.
+
+        Raises:
+            TypeError: If suit_str is not a string.
+            ValueError: If suit_str is not a valid rank character.
+
+        Example:
+            >>> CardParser.char_to_suit("s")
+            3
+        """
         if not isinstance(suit_str, str):
-            raise TypeError(f"rank_str must be string. {suit_str}")
+            raise TypeError(f"suit_str must be string. {suit_str}")
         if suit_str in cls._suit_map:
             return cls._suit_map[suit_str]
         else:

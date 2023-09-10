@@ -1,8 +1,8 @@
 from collections.abc import Iterator
 
 from pycfr.models.Suitedness import Suitedness
-from pycfr.utils.CardIndex import CardIndex
 from pycfr.utils.CardParser import CardParser
+from pycfr.utils.RangeIndex import RangeIndex
 
 
 class RangeParser:
@@ -11,10 +11,12 @@ class RangeParser:
         """Converts a string representation of a range into a list of floats.
 
         Args:
-            range_string_representation (str): A string representation of a range, where each range is separated by a comma.
+            range_string_representation (str): A string representation of a range,
+                where each range is separated by a comma.
 
         Returns:
-            list[float]: A list of floats representing the weights of each possible combination of cards in the range.
+            list[float]: A list of floats representing the weights
+                of each possible combination of cards in the range.
         """
         data: list[float] = [0.0] * 1326
         range_list: list[str] = range_string_representation.split(",")
@@ -45,16 +47,14 @@ class RangeParser:
             if rank11 > rank21:
                 for i in range(rank21, rank11 + 1):
                     RangeParser.set_weight(
-                        CardIndex.indices_with_suitedness(i, i - gap, suitedness), weight, data
+                        RangeIndex.extract(i, i - gap, suitedness), weight, data
                     )
             else:
                 raise ValueError
         elif rank11 == rank21:
             if rank12 > rank22:
                 for i in range(rank22, rank12 + 1):
-                    RangeParser.set_weight(
-                        CardIndex.indices_with_suitedness(rank11, i, suitedness), weight, data
-                    )
+                    RangeParser.set_weight(RangeIndex.extract(rank11, i, suitedness), weight, data)
             else:
                 raise ValueError
         else:
@@ -67,19 +67,15 @@ class RangeParser:
         gap = rank1 - rank2
         if gap <= 1:
             for i in range(rank1, 13):
-                RangeParser.set_weight(
-                    CardIndex.indices_with_suitedness(i, i - gap, suitedness), weight, data
-                )
+                RangeParser.set_weight(RangeIndex.extract(i, i - gap, suitedness), weight, data)
         else:
             for i in range(rank2, rank1):
-                RangeParser.set_weight(
-                    CardIndex.indices_with_suitedness(rank1, i, suitedness), weight, data
-                )
+                RangeParser.set_weight(RangeIndex.extract(rank1, i, suitedness), weight, data)
 
     @staticmethod
     def _update_with_singleton(combo: str, weight: float, data: list[float]) -> None:
         rank1, rank2, suitedness = RangeParser._parse_singleton(combo)
-        indices = CardIndex.indices_with_suitedness(rank1, rank2, suitedness)
+        indices = RangeIndex.extract(rank1, rank2, suitedness)
         RangeParser.set_weight(indices, weight, data)
 
     def from_str(self, ranges: str) -> list[float]:

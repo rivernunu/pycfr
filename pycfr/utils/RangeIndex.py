@@ -2,12 +2,31 @@ from pycfr.models.Suitedness import Suitedness
 from pycfr.utils.CardParser import CardParser
 
 
-class CardIndex:
+class RangeIndex:
     @staticmethod
-    def indices_with_suitedness(rank1: int, rank2: int, suitedness: Suitedness) -> list[int]:
+    def extract(rank1: int, rank2: int, suitedness: Suitedness) -> list[int]:
+        """Returns a list of indices based on the given ranks and suitedness.
+
+        Args:
+            rank1 (int): The rank of the first card.
+            rank2 (int): The rank of the second card.
+            suitedness (Suitedness): An instance of the `Suitedness` class representing the desired suitedness of the cards.
+
+        Returns:
+            list[int]: A list of indices representing the possible combinations of cards based on the given ranks and suitedness.
+
+        Raises:
+            ValueError: If the given parameters do not meet any of the specified conditions.
+
+        Example:
+            >>> RangeIndex.extract(0, 0, Suitedness(Specific=(0,1)))
+            0
+            >>> RangeIndex.extract(0, 0, Suitedness(All=True))
+            [0, 1, 2, 51, 52, 101]
+        """
         if rank1 == rank2:
             if suitedness.All:
-                return CardIndex._pair_indices(rank1)
+                return RangeIndex._pair_indices(rank1)
             elif suitedness.Specific:
                 return [
                     CardParser.card_pair_to_index(
@@ -15,14 +34,14 @@ class CardIndex:
                     )
                 ]
             else:
-                raise ValueError
+                raise ValueError(f"invalid suitedness with a pair. {suitedness}")
         else:
             if suitedness.Suited:
-                return CardIndex._suited_indices(rank1, rank2)
+                return RangeIndex._suited_indices(rank1, rank2)
             elif suitedness.Offsuit:
-                return CardIndex._offsuit_indices(rank1, rank2)
+                return RangeIndex._offsuit_indices(rank1, rank2)
             elif suitedness.All:
-                return CardIndex._nonpair_indices(rank1, rank2)
+                return RangeIndex._not_pair_indices(rank1, rank2)
             elif suitedness.Specific:
                 return [
                     CardParser.card_pair_to_index(
@@ -30,7 +49,7 @@ class CardIndex:
                     )
                 ]
             else:
-                raise ValueError
+                raise ValueError(f"suitedness was not defined. {suitedness}")
 
     @staticmethod
     def _pair_indices(rank: int) -> list[int]:
@@ -43,7 +62,7 @@ class CardIndex:
         return result
 
     @staticmethod
-    def _nonpair_indices(rank1: int, rank2: int) -> list[int]:
+    def _not_pair_indices(rank1: int, rank2: int) -> list[int]:
         result: list[int] = []
 
         for i in range(4):

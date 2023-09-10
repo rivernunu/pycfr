@@ -1,15 +1,15 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
-from models.Action import Action
-from models.ActionTree import ActionTree
-from models.ActionTreeNode import ActionTreeNode
-from models.BoardState import BoardState
-from models.CardConfig import CardConfig
-from models.Node import Node
-from models.State import State
-from models.StrengthItem import StrengthItem
-from models.SwapList import SwapList
-from models.TreeConfig import TreeConfig
+from pycfr.models.Action import Action
+from pycfr.models.ActionTree import ActionTree
+from pycfr.models.ActionTreeNode import ActionTreeNode
+from pycfr.models.BoardState import BoardState
+from pycfr.models.CardConfig import CardConfig
+from pycfr.models.Node import Node
+from pycfr.models.State import State
+from pycfr.models.StrengthItem import StrengthItem
+from pycfr.models.SwapList import SwapList
+from pycfr.models.TreeConfig import TreeConfig
 
 
 @dataclass
@@ -18,43 +18,43 @@ class Game:
     # postflop game configuration
     card_config: CardConfig
     tree_config: TreeConfig
-    added_lines: list[list[Action]]
-    removed_lines: list[list[Action]]
-    action_root: list[ActionTreeNode]
+    added_lines: list[list[Action]] = field(default_factory=list)
+    removed_lines: list[list[Action]] = field(default_factory=list)
+    action_root: list[ActionTreeNode] = field(default_factory=list)
     # computed from configurations
-    num_combinations: float
-    initial_weights: list[float]
-    private_cards: list[int]
-    same_hand_index: list[int]
-    valid_indices_flop: list[int]
-    valid_indices_turn: list[int]
-    valid_indices_river: list[int]
-    hand_strength: list[list[StrengthItem]]
-    isomorphism_ref_turn: list[int]
-    isomorphism_card_turn: list[int]
-    isomorphism_swap_turn: list[SwapList]
-    isomorphism_ref_river: list[int]
-    isomorphism_card_river: list[int]
-    isomorphism_swap_river: list[SwapList]
+    num_combinations: float = 0.0
+    initial_weights: list[float] = field(default_factory=list)
+    private_cards: list[int] = field(default_factory=list)
+    same_hand_index: list[int] = field(default_factory=list)
+    valid_indices_flop: list[int] = field(default_factory=list)
+    valid_indices_turn: list[int] = field(default_factory=list)
+    valid_indices_river: list[int] = field(default_factory=list)
+    hand_strength: list[list[StrengthItem]] = field(default_factory=list)
+    isomorphism_ref_turn: list[int] = field(default_factory=list)
+    isomorphism_card_turn: list[int] = field(default_factory=list)
+    isomorphism_swap_turn: list[SwapList] = field(default_factory=list)
+    isomorphism_ref_river: list[int] = field(default_factory=list)
+    isomorphism_card_river: list[int] = field(default_factory=list)
+    isomorphism_swap_river: list[SwapList] = field(default_factory=list)
     # store options
-    storage_mode: BoardState
+    storage_mode: field(default_factory=BoardState)
     target_storage_mode: BoardState
-    num_nodes: list[int]
+    num_nodes: list[int] = field(default_factory=list)
     is_compression_enabled: bool
     num_storage: int
     num_storage_ip: int
     num_storage_chance: int
     misc_memory_usage: int
     # global storage
-    node_arena: list[Node]
-    storage1: list[int]
-    storage2: list[int]
-    storage_ip: list[int]
-    storage_chance: list[int]
+    node_arena: list[Node] = field(default_factory=list)
+    storage1: list[int] = field(default_factory=list)
+    storage2: list[int] = field(default_factory=list)
+    storage_ip: list[int] = field(default_factory=list)
+    storage_chance: list[int] = field(default_factory=list)
     locking_strategy: dict[int, list[float]]
     # result interpreter
-    action_history: list[int]
-    node_history: list[int]
+    action_history: list[int] = field(default_factory=list)
+    node_history: list[int] = field(default_factory=list)
     is_normalized_weight_cached: bool
     turn: int
     river: int
@@ -62,12 +62,12 @@ class Game:
     turn_swap: int | None
     river_swap: tuple[int, int] | None
     total_bet_amount: int
-    weights: list[int]
-    normalized_weights: list[int]
-    cfvalues_cache: list[int]
+    weights: list[int] = field(default_factory=list)
+    normalized_weights: list[int] = field(default_factory=list)
+    cfvalues_cache: list[int] = field(default_factory=list)
 
-    def wight_config(self, card_config: CardConfig, action_tree: ActionTree) -> None:
-        ...
+    def __init__(self, card_config: CardConfig, action_tree: ActionTree) -> None:
+        self.update_config(card_config, action_tree)
 
     def update_config(self, card_config: CardConfig, action_tree: ActionTree) -> None:
         ...

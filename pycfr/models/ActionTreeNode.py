@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 from typing import Self
 
-from models.Action import Action
-from models.BoardState import BoardState
+from pycfr.models.Action import Action
+from pycfr.models.BoardState import BoardState
 
 
 @dataclass

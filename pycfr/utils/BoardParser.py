@@ -16,7 +16,8 @@ class BoardParser:
         [0, 5, 10]
     """
 
-    def parse(self, string: str) -> list[int] | int:
+    @staticmethod
+    def parse(string: str) -> list[int]:
         """Parse the board string into a list of integers representing the cards.
 
         Args:
@@ -34,13 +35,14 @@ class BoardParser:
         if not isinstance(string, str):
             raise TypeError(f"Cards must be a string type. {string}")
         if len(string) == 2:
-            return self._card_from_str(string)
+            return BoardParser._card_from_str(string)
         elif len(string) == 6:
-            return self._flop_from_str(string)
+            return BoardParser._flop_from_str(string)
         else:
             raise ValueError(f"Cards length must be 2 or 6. {string}")
 
-    def _flop_from_str(self, string: str) -> list[int]:
+    @staticmethod
+    def _flop_from_str(string: str) -> list[int]:
         """Parse a flop string into a sorted list of three cards as integers.
 
         Args:
@@ -55,9 +57,9 @@ class BoardParser:
         result: list[int] = [0] * 3
         chars: Iterator[str] = iter(string)
 
-        result[0] = self._card_from_chars(chars)
-        result[1] = self._card_from_chars(chars)
-        result[2] = self._card_from_chars(chars)
+        result[0] = BoardParser._card_from_chars(chars)
+        result[1] = BoardParser._card_from_chars(chars)
+        result[2] = BoardParser._card_from_chars(chars)
 
         if (result[0] == result[1]) or (result[1] == result[2]):
             raise ValueError(f"Cards must be unique. {string}")
@@ -66,7 +68,8 @@ class BoardParser:
 
         return result
 
-    def _card_from_str(self, string: str) -> int:
+    @staticmethod
+    def _card_from_str(string: str) -> list[int]:
         """Parse a card string into an integer representation.
 
         Args:
@@ -75,12 +78,14 @@ class BoardParser:
         Returns:
             int: The parsed card as an integer.
         """
+        result: list[int] = [0] * 1
         chars = iter(string)
-        result = self._card_from_chars(chars)
+        result[0] = BoardParser._card_from_chars(chars)
 
         return result
 
-    def _card_from_chars(self, chars: Iterator[str]) -> int:
+    @staticmethod
+    def _card_from_chars(chars: Iterator[str]) -> int:
         """Parse two characters representing a rank and a suit into a card integer.
 
         Args:
