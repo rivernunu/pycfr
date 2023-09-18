@@ -140,7 +140,7 @@ class RangeParser:
         if rank1 < rank2:
             raise SyntaxError
 
-        if rank1 == rank2 & suitedness.type == SuitednessType.All:
+        if rank1 == rank2 and suitedness.type == SuitednessType.All:
             raise SyntaxError
 
         return rank1, rank2, suitedness

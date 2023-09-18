@@ -20,7 +20,7 @@ class Game:
     tree_config: TreeConfig
     added_lines: list[list[Action]] = field(default_factory=list)
     removed_lines: list[list[Action]] = field(default_factory=list)
-    action_root: list[ActionTreeNode] = field(default_factory=list)
+    action_root: ActionTreeNode
     # computed from configurations
     num_combinations: float = 0.0
     initial_weights: list[float] = field(default_factory=list)

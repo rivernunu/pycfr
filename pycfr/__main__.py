@@ -8,8 +8,10 @@ python -m pycfr
 from pycfr.constants import NOT_DEALT
 from pycfr.models.ActionTree import ActionTree
 from pycfr.models.BetSizeStrategy import BetSizeStrategy
+from pycfr.models.DonkSizeStrategy import DonkSizeStrategy
 from pycfr.models.BoardState import BoardState
 from pycfr.models.CardConfig import CardConfig
+
 # from pycfr.models.Game import Game
 from pycfr.models.Range import Range
 from pycfr.models.TreeConfig import TreeConfig
@@ -30,18 +32,19 @@ def main() -> None:
     )
 
     bet_sizes = BetSizeStrategy(bet_str="60%,e,a", raise_str="2.5x")
+    donk_sizes = DonkSizeStrategy(donk_str="60%,e,a")
 
     tree_config = TreeConfig(
         initial_state=BoardState.Turn,
         starting_pot=200,
-        effective_stack=900,
+        effective_stack=[900, 900],
         rake_rate=0.0,
         rake_cap=0.0,
         flop_bet_sizes=[bet_sizes, bet_sizes],
         turn_bet_sizes=[bet_sizes, bet_sizes],
         river_bet_sizes=[bet_sizes, bet_sizes],
-        turn_donk_sizes=[],
-        river_donk_sizes=[],
+        turn_donk_sizes=donk_sizes,
+        river_donk_sizes=donk_sizes,
         add_allin_threshold=1.5,
         force_allin_threshold=0.15,
         merging_threshold=0.1,

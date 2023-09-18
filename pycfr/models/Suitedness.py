@@ -41,3 +41,7 @@ class Suitedness:
 
     type: SuitednessType
     suit: tuple[int, int] | None = None
+
+    def __post_init__(self) -> None:
+        if self.type == SuitednessType.Specific and self.suit is None:
+            raise ValueError("Suit must be provided for Suitedness.Specific")

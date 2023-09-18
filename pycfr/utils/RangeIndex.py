@@ -28,11 +28,14 @@ class RangeIndex:
             if suitedness.type == SuitednessType.All:
                 return RangeIndex._pair_indices(rank1)
             elif suitedness.type == SuitednessType.Specific:
-                return [
-                    CardParser.card_pair_to_index(
-                        4 * rank1 + suitedness.suit[0], 4 * rank1 + suitedness.suit[1]
-                    )
-                ]
+                if suitedness.suit is not None:
+                    return [
+                        CardParser.card_pair_to_index(
+                            4 * rank1 + suitedness.suit[0], 4 * rank1 + suitedness.suit[1]
+                        )
+                    ]
+                else:
+                    raise ValueError
             else:
                 raise ValueError(f"invalid suitedness with a pair. {suitedness}")
         else:
@@ -43,11 +46,14 @@ class RangeIndex:
             elif suitedness.type == SuitednessType.All:
                 return RangeIndex._not_pair_indices(rank1, rank2)
             elif suitedness.type == SuitednessType.Specific:
-                return [
-                    CardParser.card_pair_to_index(
-                        4 * rank1 + suitedness.Specific[0], 4 * rank1 + suitedness.Specific[1]
-                    )
-                ]
+                if suitedness.suit is not None:
+                    return [
+                        CardParser.card_pair_to_index(
+                            4 * rank1 + suitedness.suit[0], 4 * rank1 + suitedness.suit[1]
+                        )
+                    ]
+                else:
+                    raise ValueError
             else:
                 raise ValueError(f"suitedness was not defined. {suitedness}")
 

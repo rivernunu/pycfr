@@ -6,11 +6,11 @@ class BetSizeType(StrEnum):
     """Represents bet size types.
 
     Attributes:
-        PotRelative: ...
-        PrevBetRelative: ...
-        Additive: ...
-        Geometric: ...
-        AllIn: ...
+        PotRelative: pass.
+        PrevBetRelative: pass.
+        Additive: pass.
+        Geometric: pass.
+        AllIn: pass.
     """
 
     PotRelative: str = "PotRelative"
@@ -31,9 +31,17 @@ class BetSize:
 
 
     Example:
-        >>> BetSize(BetSizeType.AllIn)
-        >>> BetSize(BetSizeType.AllIn)
-        BetSize(type=<BetSizeType.AllIn: 'AllIn'>, value=None)
+        >>> BetSize(BetSizeType.PotRelative, 20)
+        BetSize(type=<BetSizeType.PotRelative: 'PotRelative'>, value=20)
+        >>> bet_size = BetSize(BetSizeType.PotRelative, 20)
+        >>> bet_size.type
+        <BetSizeType.PotRelative: 'PotRelative'>
+        >>> bet_size.type == "PotRelative"
+        True
+        >>> bet_size.type == BetSizeType.PotRelative
+        True
+        >>> bet_size.value
+        20
 
     """
 
