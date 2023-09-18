@@ -23,8 +23,8 @@ Example:
 from dataclasses import dataclass
 
 from pycfr.models.BetSizeStrategy import BetSizeStrategy
-from pycfr.models.DonkSizeStrategy import DonkSizeStrategy
 from pycfr.models.BoardState import BoardState
+from pycfr.models.DonkSizeStrategy import DonkSizeStrategy
 
 
 @dataclass

@@ -2,7 +2,7 @@
 
 Example:
 >>> bet_sizes = BetSizeStrategy(bet_str="60%,e,a", raise_str="2.5x")
->>> donk_sizes = DonkSizeStrategy(bet_str="50%")
+>>> donk_sizes = DonkSizeStrategy(donk_str="50%")
 >>> tree_config = TreeConfig(
 ...     initial_state=BoardState.Turn,
 ...     starting_pot=200,
@@ -29,19 +29,19 @@ from dataclasses import dataclass, field
 from pycfr.constants import (
     PLAYER_CHANCE,
     PLAYER_CHANCE_FLAG,
+    PLAYER_FOLD_FLAG,
     PLAYER_OOP,
     PLAYER_TERMINAL_FLAG,
-    PLAYER_FOLD_FLAG,
 )
 from pycfr.models.Action import Action, ActionType
 from pycfr.models.ActionTreeNode import ActionTreeNode
-from pycfr.models.BetSize import BetSizeType, BetSize
+from pycfr.models.BetSize import BetSize, BetSizeType
 from pycfr.models.BetSizeStrategy import BetSizeStrategy
-from pycfr.models.DonkSizeStrategy import DonkSizeStrategy
 from pycfr.models.BoardState import BoardState
 from pycfr.models.BuildTreeInfo import ActionBuildTreeInfo
+from pycfr.models.DonkSizeStrategy import DonkSizeStrategy
 from pycfr.models.TreeConfig import TreeConfig
-
+from pycfr.utils.ActionTreeUtility import ActionTreeUtility
 
 TreeParam = namedtuple(
     "TreeParam",
@@ -68,10 +68,10 @@ TreeParam = namedtuple(
 @dataclass
 class ActionTree:
     config: TreeConfig
-    added_lines: list[list[Action]] = field(default_factory=list)
-    removed_lines: list[list[Action]] = field(default_factory=list)
+    # added_lines: list[list[Action]] = field(default_factory=list)
+    # removed_lines: list[list[Action]] = field(default_factory=list)
     root: ActionTreeNode = field(default_factory=ActionTreeNode)
-    history: list[Action] = field(default_factory=list)
+    # history: list[Action] = field(default_factory=list)
 
     def __init__(self, config: TreeConfig) -> None:
         # self.check_config(config)
@@ -151,51 +151,6 @@ class ActionTree:
             info.create_next(player=0, action=Action(type=ActionType.Chance, value=0)),
         )
 
-    def compute_geometric(
-        self, num_streets: int, max_ratio: float, spr_after_call: float, pot: int
-    ) -> int:
-        ratio = ((2.0 * spr_after_call + 1.0) ** (1.0 / num_streets) - 1.0) / 2.0
-        return int(round(pot * min(ratio, max_ratio)))
-
-    def is_above_threshold(self, amount, prev_amount, pot, max_amount, config):
-        new_amount_diff = amount - prev_amount
-        new_pot = pot + 2 * new_amount_diff
-        threshold = round(new_pot * config.force_allin_threshold)
-        return max_amount <= amount + threshold
-
-    def clamp(self, value, minimum, maximum):
-        return min(maximum, max(minimum, value))
-
-    def merge_bet_actions(
-        self, actions: list[Action], pot: int, offset: int, param: float
-    ) -> list[Action]:
-        EPS = 1e-12
-
-        def get_amount(action):
-            if isinstance(action.type, (ActionType.Bet, ActionType.Raise, ActionType.AllIn)):
-                return action.value
-            else:
-                return -1
-
-        cur_amount = float("inf")
-        ret = []
-
-        for action in reversed(actions):
-            amount = get_amount(action)
-            if amount > 0:
-                ratio = (amount - offset) / pot
-                cur_ratio = (cur_amount - offset) / pot
-                threshold_ratio = (cur_ratio - param) / (1.0 + param)
-                if ratio < threshold_ratio * (1.0 - EPS):
-                    ret.append(action)
-                    cur_amount = amount
-            else:
-                ret.append(action)
-
-        ret.reverse()
-
-        return ret
-
     def __append_actions(self, node: ActionTreeNode, info: ActionBuildTreeInfo):
         """Pushes actions to the given ActionTreeNode bases on the provided info.
 
@@ -222,9 +177,9 @@ class ActionTree:
             actions = self.__response_actions(param)
 
         actions = self.__clamp_actions(actions, param)
-        actions.sort()
-        actions = list(dict.fromkeys(actions))
-        actions = self.merge_bet_actions(
+        # actions.sort()
+        # actions = list(dict.fromkeys(actions))
+        actions = ActionTreeUtility.merge_bet_actions(
             actions, param.pot, param.prev_amount, self.config.merging_threshold
         )
 
@@ -354,7 +309,7 @@ class ActionTree:
             elif donk_size.type == BetSizeType.Additive:
                 actions += [Action(ActionType.Bet, value=donk_size.value)]
             elif donk_size.type == BetSizeType.Geometric:
-                amount = self.compute_geometric(
+                amount = ActionTreeUtility.compute_geometric(
                     num_streets=param.num_remaining_streets,
                     max_ratio=float("inf"),
                     spr_after_call=param.spr_after_call,
@@ -375,7 +330,7 @@ class ActionTree:
         actions = []
         actions += [Action(ActionType.Check, value=0)]
 
-        for bet_size in param.candidates:
+        for bet_size in param.candidates[param.player].bet_strategy:
             if bet_size.type == BetSizeType.PotRelative:
                 amount = int(round(param.pot * bet_size.value))
                 actions += [Action(ActionType.Bet, value=amount)]
@@ -384,7 +339,7 @@ class ActionTree:
             elif bet_size.type == BetSizeType.Additive:
                 actions += [Action(ActionType.Bet, value=bet_size.value)]
             elif bet_size.type == BetSizeType.Geometric:
-                amount = self.compute_geometric(
+                amount = ActionTreeUtility.compute_geometric(
                     num_streets=param.num_remaining_streets,
                     max_ratio=float("inf"),
                     spr_after_call=param.spr_after_call,
@@ -407,7 +362,7 @@ class ActionTree:
         actions += [Action(ActionType.Call, value=0)]
 
         if not param.allin_flag:
-            for bet_size in param.candidates:
+            for bet_size in param.candidates[param.player].bet_strategy:
                 if bet_size.type == BetSizeType.PotRelative:
                     amount = param.prev_amount + int(round(param.pot * bet_size.value))
                     actions += [Action(ActionType.Raise, value=amount)]
@@ -425,7 +380,7 @@ class ActionTree:
                         if bet_size.value[0] == 0
                         else max(bet_size.value[0] - param.num_bets + 1, 1)
                     )
-                    amount = self.compute_geometric(
+                    amount = ActionTreeUtility.compute_geometric(
                         num_streets=num_streets,
                         max_ratio=float("inf"),
                         spr_after_call=param.spr_after_call,
@@ -445,8 +400,8 @@ class ActionTree:
     def __clamp_actions(self, actions: list[Action], param: TreeParam) -> list[Action]:
         for action in actions:
             if action.type == ActionType.Bet:
-                clamped = self.clamp(action.value, param.min_amount, param.max_amount)
-                if self.is_above_threshold(
+                clamped = ActionTreeUtility.clamp(action.value, param.min_amount, param.max_amount)
+                if ActionTreeUtility.is_above_threshold(
                     clamped, param.prev_amount, param.pot, param.max_amount, self.config
                 ):
                     action = Action(ActionType.AllIn, value=param.max_amount)
@@ -455,9 +410,13 @@ class ActionTree:
                 else:
                     pass
             elif action.type == ActionType.Raise:
-                clamped = self.clamp(action.value, param.min_amount, param.max_amount)
-                if self.is_above_threshold(
-                    clamped, param.prev_amount, param.pot, param.max_amount, self.config
+                clamped = ActionTreeUtility.clamp(action.value, param.min_amount, param.max_amount)
+                if ActionTreeUtility.is_above_threshold(
+                    clamped,
+                    param.prev_amount,
+                    param.pot,
+                    param.max_amount,
+                    self.config.force_allin_threshold,
                 ):
                     action = Action(ActionType.AllIn, value=param.max_amount)
                 elif clamped != action.value:

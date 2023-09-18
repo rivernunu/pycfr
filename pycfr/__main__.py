@@ -8,10 +8,9 @@ python -m pycfr
 from pycfr.constants import NOT_DEALT
 from pycfr.models.ActionTree import ActionTree
 from pycfr.models.BetSizeStrategy import BetSizeStrategy
-from pycfr.models.DonkSizeStrategy import DonkSizeStrategy
 from pycfr.models.BoardState import BoardState
 from pycfr.models.CardConfig import CardConfig
-
+from pycfr.models.DonkSizeStrategy import DonkSizeStrategy
 # from pycfr.models.Game import Game
 from pycfr.models.Range import Range
 from pycfr.models.TreeConfig import TreeConfig
